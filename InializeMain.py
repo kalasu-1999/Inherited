@@ -47,18 +47,6 @@ def getSum(mf, line):
 def Inialize(dirPosition):
     M = getM(dirPosition)
     R = getR(dirPosition)
-    # 测试用
-    # M = numpy.array([[1, 1, 1, 1, 1, 1],
-    #                  [1, 1, 1, 1, 1, 1],
-    #                  [1, 1, 1, 1, 1, 1],
-    #                  [1, 1, 1, 1, 1, 1],
-    #                  [1, 1, 0, 1, 0, 1],
-    #                  [1, 1, 0, 1, 0, 1],
-    #                  [1, 1, 1, 1, 1, 1],
-    #                  [1, 1, 0, 1, 1, 1],
-    #                  [1, 1, 1, 1, 1, 1]])
-    # M = M.T
-    # R = [0, 0, 0, 0, 1, 1]
     MF = getMF(M, R)
     TF = getTF(R)
     n = M[0].__len__()
@@ -68,7 +56,6 @@ def Inialize(dirPosition):
     lineList = []
     individual = []
     while i <= n:
-        print(i)
         if flag == 0:
             lineList = nList[i - 1]
         cSum = getSum(MF, lineList)
@@ -94,10 +81,8 @@ def Inialize(dirPosition):
             individual.append(lineList)
             flag = 0
             i = i + 1
-    for item in individual:
-        print(item)
     numpy.save(dirPosition + "/numpyDataDir/Inialize.npy", individual)
 
 
-# if __name__ == '__main__':
-#     Inialize("/mnt/e2ae2387-deae-49e8-bbbc-d48d4ca5897d/MyData/创新实践/totinfo_2.0/totinfo/versions.alt/versions.orig/v1")
+if __name__ == '__main__':
+    Inialize("/mnt/e2ae2387-deae-49e8-bbbc-d48d4ca5897d/MyData/创新实践/totinfo_2.0/totinfo/versions.alt/versions.orig/v1")
