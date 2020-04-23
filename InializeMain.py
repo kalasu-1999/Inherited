@@ -99,5 +99,5 @@ def Inialize(dirPosition):
     numpy.save(dirPosition + "/numpyDataDir/Inialize.npy", individual)
 
 
-if __name__ == '__main__':
-    Inialize("/mnt/e2ae2387-deae-49e8-bbbc-d48d4ca5897d/MyData/创新实践/totinfo_2.0/totinfo/versions.alt/versions.orig/v1")
+# if __name__ == '__main__':
+#     Inialize("/mnt/e2ae2387-deae-49e8-bbbc-d48d4ca5897d/MyData/创新实践/totinfo_2.0/totinfo/versions.alt/versions.orig/v1")
