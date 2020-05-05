@@ -13,12 +13,12 @@ def getR(dirPosition):
 
 
 # 获取只包含未通过的测试用例的矩阵
-def getMF(gcovList, answerList):
-    tempList = []
+def getMFAndMP(gcovList, answerList, MF, MP):
     for i in range(0, answerList.__len__()):
         if answerList[i] == 0:
-            tempList.append(gcovList[i])
-    return tempList
+            MF.append(gcovList[i])
+        else:
+            MP.append(gcovList[i])
 
 
 # 获取未通过测试用例的数目
@@ -33,11 +33,13 @@ def getTF(answerList):
 # 获取fai值
 def getSum(mf, line):
     temp = 0
-    for i in range(mf.__len__()):
-        for j in range(line.__len__()):
-            if line[j] > 0 and mf[i][j] > 0:
-                temp = temp + 1
-                break
+    tempList = numpy.zeros(mf.__len__(), dtype=numpy.int)
+    for i in range(line.__len__()):
+        if line[i] == 1:
+            tempList = tempList + mf[:, i]
+    for item in tempList:
+        if item > 0:
+            temp = temp + 1
     return temp
 
 
@@ -47,18 +49,35 @@ def getSum(mf, line):
 def Inialize(dirPosition):
     M = getM(dirPosition)
     R = getR(dirPosition)
-    MF = getMF(M, R)
+    # M = numpy.array(
+    #     [[1, 1, 1, 1, 1, 1],
+    #      [1, 1, 1, 1, 1, 1],
+    #      [1, 1, 1, 1, 1, 1],
+    #      [1, 1, 1, 1, 1, 1],
+    #      [1, 1, 0, 1, 0, 1],
+    #      [1, 1, 0, 1, 0, 1],
+    #      [1, 1, 1, 1, 1, 1],
+    #      [1, 1, 0, 1, 1, 1],
+    #      [1, 1, 1, 1, 1, 1]])
+    # M = M.T
+    # R = numpy.array([0, 0, 0, 0, 1, 1])
+    MF = []
+    MP = []
+    getMFAndMP(M, R, MF, MP)
+    MF = numpy.array(MF)
+    MP = numpy.array(MP)
     TF = getTF(R)
     n = M[0].__len__()
-    nList = numpy.eye(n,dtype=numpy.int)
+    nList = numpy.eye(n, dtype=numpy.int)
     i = 1
     flag = 0
     lineList = []
     individual = []
     while i <= n:
+        print(i)
         if flag == 0:
             lineList = nList[i - 1]
-        cSum = getSum(MF, lineList)
+            cSum = getSum(MF, lineList)
         if cSum != TF:
             flag = 1
             lineNum = 0
@@ -69,7 +88,7 @@ def Inialize(dirPosition):
                     tempList[l] = 1
                     cSum = getSum(MF, tempList)
                     if cSum == TF:
-                        individual.append(lineList)
+                        individual.append(tempList)
                         flag = 0
                         i = i + 1
                         break
@@ -82,7 +101,9 @@ def Inialize(dirPosition):
             flag = 0
             i = i + 1
     numpy.save(dirPosition + "/numpyDataDir/Inialize.npy", individual)
+    numpy.save(dirPosition + "/numpyDataDir/MF.npy", MF)
+    numpy.save(dirPosition + "/numpyDataDir/MP.npy", MP)
 
 
 if __name__ == '__main__':
-    Inialize("/mnt/e2ae2387-deae-49e8-bbbc-d48d4ca5897d/MyData/创新实践/totinfo_2.0/totinfo/versions.alt/versions.orig/v1")
+    Inialize("/home/kalasu/PycharmProjects/tot_info")
