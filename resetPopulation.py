@@ -60,20 +60,21 @@ def selection(population, popMultiOchiai):
 
 def inherited(oldPop, mf, mp):
     mul = getMultiOchiai(mf, mp, oldPop)
-    population1 = oldPop.copy()
-    population1 = mutation(population1)
-    population2 = numpy.array(crossover(oldPop))
-    population3 = numpy.array(selection(oldPop, mul))
-    mul1 = getMultiOchiai(mf, mp, population1)
-    mul2 = getMultiOchiai(mf, mp, population2)
+    population1 = numpy.array(selection(oldPop, mul))
+    population2 = numpy.array(crossover(population1))
+    population3 = mutation(population2)
     mul3 = getMultiOchiai(mf, mp, population3)
-    tempPopulation = numpy.vstack((oldPop, population1, population2, population3))
-    tempMul = numpy.hstack((mul, mul1, mul2, mul3))
     newPopulation = []
-    for i in range(tempMul.__len__()):
-        if newPopulation.__len__() < np and tempMul[i] == numpy.max(tempMul):
-            newPopulation.append(tempPopulation[i])
-            tempMul[i] = 0
+    while newPopulation.__len__() < np / 2:
+        max = numpy.max(mul)
+        for i in range(mul.__len__()):
+            if newPopulation.__len__() < np / 2 and mul[i] == max:
+                newPopulation.append(oldPop[i])
+    while newPopulation.__len__() < np:
+        max = numpy.max(mul3)
+        for i in range(mul3.__len__()):
+            if newPopulation.__len__() < np and mul3[i] == max:
+                newPopulation.append(population3[i])
     return numpy.array(newPopulation)
 
 
@@ -83,7 +84,6 @@ def resetMain(dirPosition):
     mp = lordMP(dirPosition)
     tf = getTF(getR(dirPosition))
     for i in range(100):
-        print(i)
         population = inherited(population, mf, mp)
         j = 0
         while j < population.__len__():
@@ -91,8 +91,22 @@ def resetMain(dirPosition):
                 population = numpy.delete(population, j, axis=0)
             else:
                 j = j + 1
+    print("finish")
+    mul = getMultiOchiai(mf, mp, population)
+    temp = []
+    while temp.__len__() < 10:
+        max = numpy.max(mul)
+        for i in range(mul.__len__()):
+            line = []
+            if mul[i] == max:
+                for j in range(len(population[i])):
+                    if population[i][j] == 1:
+                        line.append(j)
+                if line not in temp:
+                    temp.append(line)
+                mul[i] = 0
+    print(temp)
     numpy.save(dirPosition + "/numpyDataDir/population.npy", population)
-    print(population)
 
 
 if __name__ == '__main__':
