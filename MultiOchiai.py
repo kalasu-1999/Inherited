@@ -21,7 +21,8 @@ def getPc(mp, line):  # 得到Pc
         if line[i] == 1:
             tempList = tempList + mp[:, i]
     for item in tempList:
-        temp = temp + item
+        if item > 0:
+            temp = temp + 1
     return temp
 
 

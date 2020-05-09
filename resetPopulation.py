@@ -80,11 +80,11 @@ def inherited(oldPop, mf, mp):
     mul3 = getMultiOchiai(mf, mp, population3)
     # 用于存放新种群
     newPopulation = []
-    # 从原种群中选出np/2的个体加入新种群
-    while newPopulation.__len__() < np / 2:
+    # 从原种群中选出10个最优的个体（适应度最高个体）加入新种群
+    while newPopulation.__len__() < 10:
         max = numpy.max(mul)
         for i in range(mul.__len__()):
-            if newPopulation.__len__() < np / 2 and mul[i] == max:
+            if newPopulation.__len__() < 10 and mul[i] == max:
                 newPopulation.append(oldPop[i])
     # 从下一代种群中选出剩余所需的np/2的个体加新种群
     while newPopulation.__len__() < np:
@@ -122,7 +122,7 @@ def resetMain(dirPosition):
     # 用于存放前十的怀疑度结果
     temp = []
     # 根据适应度值对将前十怀疑的不相同的个体进行选择加入temp中
-    while temp.__len__() < 10:
+    while temp.__len__() < 20:
         max = numpy.max(mul)
         for i in range(mul.__len__()):
             line = []
@@ -137,7 +137,7 @@ def resetMain(dirPosition):
     for item in temp:
         print(item)
     # 将计算得到的最终种群存放到指定文件中
-    numpy.save(dirPosition + "/numpyDataDir/population.npy", population)
+    numpy.save(dirPosition + "/numpyDataDir/population.npy", temp)
 
 
 if __name__ == '__main__':
